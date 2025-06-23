@@ -1,0 +1,179 @@
+{
+  "books": [
+    {
+      "id": "1342",
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "year": 1813,
+      "genre": "Romance"
+    },
+    {
+      "id": "11",
+      "title": "Alice's Adventures in Wonderland",
+      "author": "Lewis Carroll",
+      "year": 1865,
+      "genre": "Children's Literature"
+    },
+    {
+      "id": "74",
+      "title": "The Adventures of Tom Sawyer",
+      "author": "Mark Twain",
+      "year": 1876,
+      "genre": "Adventure"
+    },
+    {
+      "id": "1661",
+      "title": "The Adventures of Sherlock Holmes",
+      "author": "Arthur Conan Doyle",
+      "year": 1892,
+      "genre": "Mystery"
+    },
+    {
+      "id": "84",
+      "title": "Frankenstein",
+      "author": "Mary Shelley",
+      "year": 1818,
+      "genre": "Gothic Horror"
+    },
+    {
+      "id": "345",
+      "title": "Dracula",
+      "author": "Bram Stoker",
+      "year": 1897,
+      "genre": "Gothic Horror"
+    },
+    {
+      "id": "2701",
+      "title": "Moby Dick",
+      "author": "Herman Melville",
+      "year": 1851,
+      "genre": "Adventure"
+    },
+    {
+      "id": "1260",
+      "title": "Jane Eyre",
+      "author": "Charlotte Brontë",
+      "year": 1847,
+      "genre": "Romance"
+    },
+    {
+      "id": "174",
+      "title": "The Picture of Dorian Gray",
+      "author": "Oscar Wilde",
+      "year": 1890,
+      "genre": "Gothic Fiction"
+    },
+    {
+      "id": "205",
+      "title": "Walden",
+      "author": "Henry David Thoreau",
+      "year": 1854,
+      "genre": "Philosophy"
+    },
+    {
+      "id": "46",
+      "title": "A Christmas Carol",
+      "author": "Charles Dickens",
+      "year": 1843,
+      "genre": "Christmas Story"
+    },
+    {
+      "id": "76",
+      "title": "Adventures of Huckleberry Finn",
+      "author": "Mark Twain",
+      "year": 1884,
+      "genre": "Adventure"
+    },
+    {
+      "id": "1400",
+      "title": "Great Expectations",
+      "author": "Charles Dickens",
+      "year": 1861,
+      "genre": "Coming of Age"
+    },
+    {
+      "id": "5200",
+      "title": "Metamorphosis",
+      "author": "Franz Kafka",
+      "year": 1915,
+      "genre": "Literary Fiction"
+    },
+    {
+      "id": "2554",
+      "title": "Crime and Punishment",
+      "author": "Fyodor Dostoevsky",
+      "year": 1866,
+      "genre": "Psychological Fiction"
+    },
+    {
+      "id": "64317",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "year": 1925,
+      "genre": "Literary Fiction"
+    },
+    {
+      "id": "25344",
+      "title": "The Scarlet Letter",
+      "author": "Nathaniel Hawthorne",
+      "year": 1850,
+      "genre": "Historical Fiction"
+    },
+    {
+      "id": "43",
+      "title": "The Strange Case of Dr. Jekyll and Mr. Hyde",
+      "author": "Robert Louis Stevenson",
+      "year": 1886,
+      "genre": "Gothic Horror"
+    },
+    {
+      "id": "1232",
+      "title": "The Prince",
+      "author": "Niccolò Machiavelli",
+      "year": 1532,
+      "genre": "Political Philosophy"
+    },
+    {
+      "id": "98",
+      "title": "A Tale of Two Cities",
+      "author": "Charles Dickens",
+      "year": 1859,
+      "genre": "Historical Fiction"
+    },
+    {
+      "id": "35",
+      "title": "The Time Machine",
+      "author": "H. G. Wells",
+      "year": 1895,
+      "genre": "Science Fiction"
+    },
+    {
+      "id": "36",
+      "title": "The War of the Worlds",
+      "author": "H. G. Wells",
+      "year": 1898,
+      "genre": "Science Fiction"
+    },
+    {
+      "id": "120",
+      "title": "Treasure Island",
+      "author": "Robert Louis Stevenson",
+      "year": 1883,
+      "genre": "Adventure"
+    },
+    {
+      "id": "1080",
+      "title": "A Modest Proposal",
+      "author": "Jonathan Swift",
+      "year": 1729,
+      "genre": "Satire"
+    },
+    {
+      "id": "15",
+      "title": "Aesop's Fables",
+      "author": "Aesop",
+      "year": -600,
+      "genre": "Fables"
+    }
+  ]
+}
