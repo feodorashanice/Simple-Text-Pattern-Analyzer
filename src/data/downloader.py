@@ -1,36 +1,50 @@
 """
-Data Downloader
-Downloads and manages Project Gutenberg books
+Data downloader for Project Gutenberg books.
+Handles downloading and managing book files.
 """
 
 import os
 import json
 import requests
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple
+
 
 class DataDownloader:
     """Downloads and manages Project Gutenberg data"""
     
-    def __init__(self, data_dir: str = "gutenberg_data"):
-        """
-        Initialize downloader
-        
-        Args:
-            data_dir: Directory to store downloaded books
-        """
+    def __init__(self, data_dir="gutenberg_data"):
         self.data_dir = data_dir
         self.metadata_file = os.path.join(data_dir, "metadata.json")
         os.makedirs(data_dir, exist_ok=True)
     
-    def load_books_from_json(self, json_file: str = "data/books_database.json") -> Dict[str, Tuple[str, int]]:
+    def download_catalog(self):
+        """Download Project Gutenberg catalog"""
+        catalog_url = "https://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.zip"
+        print("Downloading Project Gutenberg catalog...")
+        
+        try:
+            response = requests.get(catalog_url, stream=True)
+            catalog_path = os.path.join(self.data_dir, "catalog.zip")
+            
+            with open(catalog_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            
+            print("Catalog downloaded successfully!")
+            return catalog_path
+        except Exception as e:
+            print(f"Error downloading catalog: {e}")
+            return None
+    
+    def load_books_from_json(self, json_file: str = "books_database.json") -> Dict[str, Tuple[str, int]]:
         """
-        Load books from JSON database
+        Load books from JSON database.
         
         Args:
-            json_file: Path to JSON database file
+            json_file: Path to JSON file containing book metadata
             
         Returns:
-            Dictionary mapping book IDs to (title, year) tuples
+            Dictionary mapping book ID to (title, year) tuple
         """
         books_dict = {}
         
@@ -55,17 +69,17 @@ class DataDownloader:
             
         except FileNotFoundError:
             print(f"Warning: {json_file} not found. Using fallback sample.")
-            return self._get_fallback_books()
+            return self.get_fallback_books()
         except json.JSONDecodeError as e:
             print(f"Error parsing JSON: {e}. Using fallback sample.")
-            return self._get_fallback_books()
+            return self.get_fallback_books()
     
-    def _get_fallback_books(self) -> Dict[str, Tuple[str, int]]:
+    def get_fallback_books(self) -> Dict[str, Tuple[str, int]]:
         """
-        Fallback books if JSON loading fails
+        Fallback books if JSON loading fails.
         
         Returns:
-            Dictionary of fallback books
+            Dictionary of sample books for testing
         """
         return {
             "1342": ("Pride and Prejudice by Jane Austen", 1813),
@@ -75,68 +89,47 @@ class DataDownloader:
             "2701": ("Moby Dick by Herman Melville", 1851),
         }
     
-    def download_book(self, book_id: str) -> Optional[str]:
+    def download_book(self, book_id: str) -> str:
         """
-        Download a single book from Project Gutenberg
+        Download a single book from Project Gutenberg.
         
         Args:
-            book_id: Project Gutenberg book ID
+            book_id: The Project Gutenberg book ID
             
         Returns:
-            Path to downloaded file, or None if failed
+            Path to downloaded book file, or None if failed
         """
         book_path = os.path.join(self.data_dir, f"{book_id}.txt")
         
         if os.path.exists(book_path):
+            print(f"Book {book_id} already exists")
             return book_path
         
-        # Try multiple URL formats
-        urls = [
-            f"https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt",
-            f"https://www.gutenberg.org/files/{book_id}/{book_id}.txt",
-            f"https://www.gutenberg.org/ebooks/{book_id}.txt.utf-8"
-        ]
+        url = f"https://www.gutenberg.org/files/{book_id}/{book_id}-0.txt"
+        try:
+            print(f"Downloading book {book_id}...")
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            
+            with open(book_path, 'w', encoding='utf-8', errors='ignore') as f:
+                f.write(response.text)
+            
+            print(f"Book {book_id} downloaded successfully!")
+            return book_path
         
-        for url in urls:
+        except Exception as e:
+            print(f"Error downloading book {book_id}: {e}")
+            # Try alternative URL format
+            alt_url = f"https://www.gutenberg.org/ebooks/{book_id}.txt.utf-8"
             try:
-                print(f"Downloading book {book_id} from {url}...")
-                response = requests.get(url, timeout=15)
+                response = requests.get(alt_url, timeout=10)
                 response.raise_for_status()
                 
                 with open(book_path, 'w', encoding='utf-8', errors='ignore') as f:
                     f.write(response.text)
                 
-                print(f"✓ Book {book_id} downloaded successfully!")
+                print(f"Book {book_id} downloaded successfully (alternative URL)!")
                 return book_path
-                
-            except requests.RequestException as e:
-                print(f"  Failed: {e}")
-                continue
-        
-        print(f"✗ Failed to download book {book_id} from all URLs")
-        return None
-    
-    def get_book_path(self, book_id: str) -> Optional[str]:
-        """
-        Get path to book file (download if necessary)
-        
-        Args:
-            book_id: Project Gutenberg book ID
-            
-        Returns:
-            Path to book file, or None if not available
-        """
-        book_path = os.path.join(self.data_dir, f"{book_id}.txt")
-        
-        if os.path.exists(book_path):
-            return book_path
-        
-        return self.download_book(book_id)
-    
-    def clear_cache(self):
-        """Clear downloaded books cache"""
-        import shutil
-        if os.path.exists(self.data_dir):
-            shutil.rmtree(self.data_dir)
-        os.makedirs(self.data_dir, exist_ok=True)
-        print("Cache cleared successfully!")
+            except Exception as e2:
+                print(f"Failed to download book {book_id} from alternative URL: {e2}")
+                return None

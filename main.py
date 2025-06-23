@@ -1,35 +1,48 @@
 #!/usr/bin/env python3
 """
-Simple Ngram Viewer - Main Entry Point
-Terminal-based ngram viewer inspired by Google Ngram Viewer
+Simple Ngram Viewer - Terminal-based program inspired by Google Ngram Viewer
+Uses KMP and Boyer-Moore algorithms for pattern matching
+Data source: Project Gutenberg books
 """
 
-import sys
-import os
+from src.analysis.ngram_analyzer import NgramAnalyzer
 
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-
-from analysis.ngram_analyzer import NgramAnalyzer
 
 def main():
-    """Main entry point"""
+    """Main program entry point"""
     print("Simple Ngram Viewer")
     print("==================")
     print("Inspired by Google Ngram Viewer")
     print("Using KMP and Boyer-Moore algorithms for pattern matching")
     print()
     
-    try:
-        analyzer = NgramAnalyzer()
-        analyzer.run()
-    except KeyboardInterrupt:
-        print("\n\nGoodbye!")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return 1
+    analyzer = NgramAnalyzer()
     
-    return 0
+    # Setup data
+    analyzer.setup_data()
+    
+    if not analyzer.is_data_ready():
+        print("No data available. Please check your internet connection.")
+        return
+    
+    # Main program loop
+    while True:
+        print("\n" + "="*50)
+        word = input("Enter a word to search (or 'quit' to exit): ").strip()
+        
+        if word.lower() == 'quit':
+            break
+        
+        if not word:
+            continue
+        
+        # Choose algorithm
+        algorithm = input("Choose algorithm (kmp/boyer-moore) [default: kmp]: ").strip().lower()
+        if algorithm not in ['kmp', 'boyer-moore']:
+            algorithm = 'kmp'
+        
+        analyzer.analyze_word(word, algorithm)
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
