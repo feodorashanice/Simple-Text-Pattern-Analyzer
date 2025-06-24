@@ -1,8 +1,3 @@
-"""
-Pattern matching algorithms for text search.
-Implements KMP and Boyer-Moore algorithms.
-"""
-
 from typing import List
 
 
