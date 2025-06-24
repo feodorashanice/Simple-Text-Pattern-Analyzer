@@ -36,7 +36,7 @@ class DataDownloader:
             print(f"Error downloading catalog: {e}")
             return None
     
-    def load_books_from_json(self, json_file: str = "books_database.json") -> Dict[str, Tuple[str, int]]:
+    def load_books_from_json(self, json_file: str = None) -> Dict[str, Tuple[str, int]]:
         """
         Load books from JSON database.
         
@@ -46,33 +46,48 @@ class DataDownloader:
         Returns:
             Dictionary mapping book ID to (title, year) tuple
         """
+        # Try multiple possible file locations
+        if json_file is None:
+            possible_files = [
+                "books_database.json",
+                "data/books_database.json",
+                os.path.join(self.data_dir, "books_database.json")
+            ]
+        else:
+            possible_files = [json_file]
+        
         books_dict = {}
         
-        try:
-            with open(json_file, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            
-            for book in data['books']:
-                book_id = book['id']
-                title = book['title']
-                year = book['year']
-                author = book.get('author', 'Unknown')
-                
-                # Skip very old books (before 1500) for better decade distribution
-                if year < 1500:
-                    continue
+        for file_path in possible_files:
+            try:
+                if os.path.exists(file_path):
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
                     
-                books_dict[book_id] = (f"{title} by {author}", year)
-            
-            print(f"Loaded {len(books_dict)} books from {json_file}")
-            return books_dict
-            
-        except FileNotFoundError:
-            print(f"Warning: {json_file} not found. Using fallback sample.")
-            return self.get_fallback_books()
-        except json.JSONDecodeError as e:
-            print(f"Error parsing JSON: {e}. Using fallback sample.")
-            return self.get_fallback_books()
+                    for book in data['books']:
+                        book_id = str(book['id'])  # Ensure book_id is string
+                        title = book['title']
+                        year = book['year']
+                        author = book.get('author', 'Unknown')
+                        
+                        # Skip very old books (before 1500) for better decade distribution
+                        if year < 1500:
+                            continue
+                            
+                        books_dict[book_id] = (f"{title} by {author}", year)
+                    
+                    print(f"Loaded {len(books_dict)} books from {file_path}")
+                    return books_dict
+                    
+            except json.JSONDecodeError as e:
+                print(f"Error parsing JSON from {file_path}: {e}")
+                continue
+            except Exception as e:
+                print(f"Error reading {file_path}: {e}")
+                continue
+        
+        print(f"Warning: Could not find or load books database. Using fallback sample.")
+        return self.get_fallback_books()
     
     def get_fallback_books(self) -> Dict[str, Tuple[str, int]]:
         """
